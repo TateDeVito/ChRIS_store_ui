@@ -19,6 +19,7 @@ import { FileIcon, UploadIcon, ExclamationTriangleIcon } from '@patternfly/react
 
 import Button from '../Button';
 import './CreatePlugin.css';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
 class CreatePlugin extends Component {
   constructor() {
@@ -322,114 +323,116 @@ class CreatePlugin extends Component {
     );
 
     return (
-      <article className="createplugin">
-        <Grid hasGutter className="createplugin-form-container">
-          <GridItem lg={6} xs={12}>
-            <Grid hasGutter>
-              <GridItem xs={12}>
-                <h1>Create Plugin</h1><br/>
-              </GridItem>
+      <ErrorBoundary>
+        <article className="createplugin">
+          <Grid hasGutter className="createplugin-form-container">
+            <GridItem lg={6} xs={12}>
+              <Grid hasGutter>
+                <GridItem xs={12}>
+                  <h1>Create Plugin</h1><br/>
+                </GridItem>
 
-              <GridItem xs={12}>
-                <h3><b>Plugin Creation</b></h3>
-                <p style={{ fontSize: '1.25em' }}>
-                  Plugins should already exist and have their own public source repo and existing docker image.
-                  Adding a plugin to the store simply adds the location of your plugin, allowing other users to access it.
-                </p>
-              </GridItem>
+                <GridItem xs={12}>
+                  <h3><b>Plugin Creation</b></h3>
+                  <p style={{ fontSize: '1.25em' }}>
+                    Plugins should already exist and have their own public source repo and existing docker image.
+                    Adding a plugin to the store simply adds the location of your plugin, allowing other users to access it.
+                  </p>
+                </GridItem>
 
-              <GridItem xs={12}>
-                <h3><b>About Plugins</b></h3>
-                <p style={{ fontSize: '1.25em' }}>
-                  Plugins should already exist and have their own public source repo and existing docker image.
-                  Adding a plugin to the store simply adds the location of your plugin, allowing other users to access it.
-                </p>
-              </GridItem>
-            </Grid>
-          </GridItem>
+                <GridItem xs={12}>
+                  <h3><b>About Plugins</b></h3>
+                  <p style={{ fontSize: '1.25em' }}>
+                    Plugins should already exist and have their own public source repo and existing docker image.
+                    Adding a plugin to the store simply adds the location of your plugin, allowing other users to access it.
+                  </p>
+                </GridItem>
+              </Grid>
+            </GridItem>
 
-          <GridItem lg={6} xs={12}>
-            <Grid hasGutter>
-              {
-                formError ? (
-                  <GridItem xs={12}>
-                    <Alert
-                      className="createplugin-message"
-                      variant="danger"
-                      title={formError}
-                      timeout={5000}
-                    />
-                  </GridItem>
-                ) : null
-              }
+            <GridItem lg={6} xs={12}>
+              <Grid hasGutter>
+                {
+                  formError ? (
+                    <GridItem xs={12}>
+                      <Alert
+                        className="createplugin-message"
+                        variant="danger"
+                        title={formError}
+                        timeout={5000}
+                      />
+                    </GridItem>
+                  ) : null
+                }
 
-              {
-                success ? (
-                  <GridItem xs={12}>
-                    <Alert
-                      className="createplugin-message"
-                      variant="success"
-                      title="Plugin was successfully created!"
-                      timeout={5000}
-                    >
-                      <Link
-                        className="createplugin-success-message-link"
-                        to={`/plugin/${pluginId}`}
-                        href={`/plugin/${pluginId}`}
+                {
+                  success ? (
+                    <GridItem xs={12}>
+                      <Alert
+                        className="createplugin-message"
+                        variant="success"
+                        title="Plugin was successfully created!"
+                        timeout={5000}
                       >
-                        Click Here to view.
-                      </Link>
-                    </Alert>
-                  </GridItem>
-                ) : null
-              }
+                        <Link
+                          className="createplugin-success-message-link"
+                          to={`/plugin/${pluginId}`}
+                          href={`/plugin/${pluginId}`}
+                        >
+                          Click Here to view.
+                        </Link>
+                      </Alert>
+                    </GridItem>
+                  ) : null
+                }
 
-              <GridItem xs={12}>
-                <Card>
-                  <CardHeader>
-                    <h2>Add Plugin Details</h2>
-                  </CardHeader>
+                <GridItem xs={12}>
+                  <Card>
+                    <CardHeader>
+                      <h2>Add Plugin Details</h2>
+                    </CardHeader>
 
-                  <CardBody>
-                    <Form id="createplugin-form">
-                      { PluginFormDataGroups }
+                    <CardBody>
+                      <Form id="createplugin-form">
+                        { PluginFormDataGroups }
 
-                      <FormGroup label="Representation File" id="createplugin-upload">
-                        <div id="createplugin-upload-file">
-                          <span id="createplugin-upload-icon">
-                            { // eslint-disable-next-line no-nested-ternary
-                              fileError ? <ExclamationTriangleIcon /> : (
-                              !fileName ? <UploadIcon /> : <FileIcon />
-                            )}
-                          </span>
-                          <FileUpload
-                            id="createplugin-upload-fileupload"
-                            className="fileupload"
-                            type="file"
-                            isRequired
-                            accept=".json"
-                            browseButtonText="Select File"
-                            filename={fileName}
-                            onChange={this.handleFile}
-                          />
-                        </div>
-                      </FormGroup>
+                        <FormGroup label="Representation File" id="createplugin-upload">
+                          <div id="createplugin-upload-file">
+                            <span id="createplugin-upload-icon">
+                              { // eslint-disable-next-line no-nested-ternary
+                                fileError ? <ExclamationTriangleIcon /> : (
+                                !fileName ? <UploadIcon /> : <FileIcon />
+                              )}
+                            </span>
+                            <FileUpload
+                              id="createplugin-upload-fileupload"
+                              className="fileupload"
+                              type="file"
+                              isRequired
+                              accept=".json"
+                              browseButtonText="Select File"
+                              filename={fileName}
+                              onChange={this.handleFile}
+                            />
+                          </div>
+                        </FormGroup>
 
-                      <Button
-                        id="createplugin-create-btn"
-                        variant="primary"
-                        onClick={this.handleSubmit}
-                      >
-                        Create
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </GridItem>
-            </Grid>
-          </GridItem>
-        </Grid>
-      </article>
+                        <Button
+                          id="createplugin-create-btn"
+                          variant="primary"
+                          onClick={this.handleSubmit}
+                        >
+                          Create
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </GridItem>
+              </Grid>
+            </GridItem>
+          </Grid>
+        </article>
+      </ErrorBoundary>
     );
   }
 }

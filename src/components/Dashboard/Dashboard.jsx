@@ -12,6 +12,7 @@ import DashGitHubView from "./components/DashGitHubView/DashGitHubView";
 import ChrisStore from "../../store/ChrisStore";
 import ErrorNotification from "../Notification";
 import HttpApiCallError from "../../errors/HttpApiCallError";
+import ErrorBoundary from "../ErrorBoundary/ErrorBoundary";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -105,62 +106,64 @@ class Dashboard extends Component {
     
     return (
       <>
-        {error && (
-          <ErrorNotification
-            title={error}
-            position="top-right"
-            variant="danger"
-            closeable
-            onClose={() => this.setState({ error: null })}
-          />
-        )}
+        <ErrorBoundary>
+          {error && (
+            <ErrorNotification
+              title={error}
+              position="top-right"
+              variant="danger"
+              closeable
+              onClose={() => this.setState({ error: null })}
+            />
+          )}
 
-        <article id="dashboard-container">
-          <Split id="title-bar">
-            <SplitItem id="title-name">
-              <h2>Dashboard</h2>
-            </SplitItem>
-            <SplitItem isFilled />
-            <SplitItem id="title-actions-container">
-              <Button variant="primary" toRoute="/create">
-                Add Plugin
-              </Button>
-              {/* <Button variant="secondary" toRoute="/">
-                Another
-              </Button> */}
-            </SplitItem>
-          </Split>
+          <article id="dashboard-container">
+            <Split id="title-bar">
+              <SplitItem id="title-name">
+                <h2>Dashboard</h2>
+              </SplitItem>
+              <SplitItem isFilled />
+              <SplitItem id="title-actions-container">
+                <Button variant="primary" toRoute="/create">
+                  Add Plugin
+                </Button>
+                {/* <Button variant="secondary" toRoute="/">
+                  Another
+                </Button> */}
+              </SplitItem>
+            </Split>
 
-          {
-            loading ? (
-              <div id="dashboard-spinner">
-                <Spinner size="xl" />
-              </div>
-            ) : (
-              <Grid hasGutter className="cards-pf" id="dashboard-body">
-                <GridItem lg={8} xs={12}>
-                  <Grid hasGutter>
-                    <GridItem xs={12}>
-                      <DashPluginCardView
-                        plugins={pluginList}
-                        onDelete={this.deletePlugin}
-                        onEdit={this.editPlugin}
-                      />
-                    </GridItem>
+            {
+              loading ? (
+                <div id="dashboard-spinner">
+                  <Spinner size="xl" />
+                </div>
+              ) : (
+                <Grid hasGutter className="cards-pf" id="dashboard-body">
+                  <GridItem lg={8} xs={12}>
+                    <Grid hasGutter>
+                      <GridItem xs={12}>
+                        <DashPluginCardView
+                          plugins={pluginList}
+                          onDelete={this.deletePlugin}
+                          onEdit={this.editPlugin}
+                        />
+                      </GridItem>
 
-                    <GridItem xs={12}>
-                      <DashTeamView plugins={pluginList} />
-                    </GridItem>
-                  </Grid>
-                </GridItem>
+                      <GridItem xs={12}>
+                        <DashTeamView plugins={pluginList} />
+                      </GridItem>
+                    </Grid>
+                  </GridItem>
 
-                <GridItem lg={4} xs={12} id="dashboard-right-column">
-                  <DashGitHubView plugins={pluginList} />
-                </GridItem>
-              </Grid>
-            )
-          }
-        </article>
+                  <GridItem lg={4} xs={12} id="dashboard-right-column">
+                    <DashGitHubView plugins={pluginList} />
+                  </GridItem>
+                </Grid>
+              )
+            }
+            </article>
+          </ErrorBoundary>
       </>
     );
   }

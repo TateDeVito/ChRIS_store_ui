@@ -14,6 +14,7 @@ import ErrorNotification from '../Notification';
 import HttpApiCallError from '../../errors/HttpApiCallError';
 
 import './Plugin.css';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 
 /**
  * View a plugin by plugin ID.
@@ -78,6 +79,8 @@ export class PluginView extends Component {
 
   // eslint-disable-next-line react/destructuring-assignment
   isLoggedIn = () => this.props.store ? this.props.store.get('isLoggedIn') : false;
+
+  isTest = () => this.props.nothing;
 
   onStarClicked = () => {
     if (this.isLoggedIn()) {
@@ -246,24 +249,26 @@ export class PluginView extends Component {
 
     return (
       <>
-        {
-          errors.map((message, index) => (
-            <ErrorNotification
-              key={`notif-${message}`}
-              title={message}
-              position='top-right'
-              variant='danger'
-              closeable
-              onClose={() => {
-                errors.splice(index)
-                this.setState({ errors })
-              }}
-            />
-          ))
-        }
-        <div className="plugin">
-          {container}
-        </div>
+        <ErrorBoundary>
+          {
+            errors.map((message, index) => (
+              <ErrorNotification
+                key={`notif-${message}`}
+                title={message}
+                position='top-right'
+                variant='danger'
+                closeable
+                onClose={() => {
+                  errors.splice(index)
+                  this.setState({ errors })
+                }}
+              />
+            ))
+          }
+          <div className="plugin">
+            {container}
+            </div>
+        </ErrorBoundary>
       </>
 
     );
